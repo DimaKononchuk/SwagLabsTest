@@ -21,9 +21,13 @@ jobs:
       env:
           STANDARD_USER: ${{ secrets.STANDARD_USER }}
           STANDARD_PASSWORD: ${{ secrets.STANDARD_PASSWORD }}
+          LOCKED_OUT_USER: ${{ secrets.LOCKED_OUT_USER }}
+          LOCKED_OUT_PASSWORD: ${{ secrets.LOCKED_OUT_PASSWORD }}
       run: |
         echo "STANDARD_USER=$STANDARD_USER" > .env
         echo "STANDARD_PASSWORD=$STANDARD_PASSWORD" >> .env
+        echo "LOCKED_OUT_USER=$LOCKED_OUT_USER" >> .env
+        echo "LOCKED_OUT_PASSWORD=$LOCKED_OUT_PASSWORD" >> .env
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
