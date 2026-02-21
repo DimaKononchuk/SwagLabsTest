@@ -24,8 +24,7 @@ test('login with empty username field', async ({ page }) => {
   
   expect(await loginPage.isErrorMessageVisible()).toBe(true);
   
-  const errorMsg = await loginPage.getErrorMessage();
-  expect(errorMsg).toContain('Username is required');
+  await loginPage.expectErrorMessageToBe('Epic sadface: Username is required');
 });
 
 test('login with empty password field', async ({ page }) => {
@@ -35,8 +34,7 @@ test('login with empty password field', async ({ page }) => {
   
   expect(await loginPage.isErrorMessageVisible()).toBe(true);
   
-  const errorMsg = await loginPage.getErrorMessage();
-  expect(errorMsg).toContain('Password is required');
+  await loginPage.expectErrorMessageToBe('Epic sadface: Password is required');
 });
 
 test('login with both fields empty', async ({ page }) => {
@@ -46,8 +44,7 @@ test('login with both fields empty', async ({ page }) => {
   
   expect(await loginPage.isErrorMessageVisible()).toBe(true);
   
-  const errorMsg = await loginPage.getErrorMessage();
-  expect(errorMsg).toContain('Username is required');
+  await loginPage.expectErrorMessageToBe('Epic sadface: Username is required');
 });
 
 test('login with wrong password', async ({ page }) => {
@@ -56,7 +53,20 @@ test('login with wrong password', async ({ page }) => {
   await loginPage.login(process.env.STANDARD_USER!, 'wrong_password');
   
   expect(await loginPage.isErrorMessageVisible()).toBe(true);
+
+  await loginPage.expectErrorMessageToBe('Epic sadface: Username and password do not match any user in this service');
+});
+
+test('login with locked out user', async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.goto();
+  await loginPage.login(
+    process.env.LOCKED_OUT_USER!,
+    process.env.LOCKED_OUT_PASSWORD!
+  );
   
-  const errorMsg = await loginPage.getErrorMessage();
-  expect(errorMsg).toContain('Epic sadface: Username and password do not match any user in this service');
+  expect(await loginPage.isErrorMessageVisible()).toBe(true);
+  
+  await loginPage.expectErrorMessageToBe('Epic sadface: Sorry, this user has been locked out.');
+  
 });
