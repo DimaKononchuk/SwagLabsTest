@@ -21,6 +21,9 @@ jobs:
       env:
           MY_USER_EMAIL: ${{ secrets.USER_EMAIL }}
           MY_USER_PASSWORD: ${{ secrets.USER_PASSWORD }}
+      run: |
+        echo "USER_EMAIL=$MY_USER_EMAIL" > .env
+        echo "USER_PASSWORD=$MY_USER_PASSWORD" >> .env
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
