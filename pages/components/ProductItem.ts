@@ -21,12 +21,12 @@ export class ProductItem {
     this.removeButton = itemLocator.locator('[data-test*="remove"]');
   }
 
-  async getName(): Promise<string | null> {
-    return await this.productName.textContent();
+  getName(): Locator {
+    return this.productName;
   }
 
-  async getPrice(): Promise<string | null> {
-    return await this.productPrice.textContent();
+  getPrice(): Locator{
+    return this.productPrice;
   }
 
   async getDescription(): Promise<string | null> {
