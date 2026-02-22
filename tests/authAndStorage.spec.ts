@@ -8,7 +8,7 @@ import path from 'path';
 dotenv.config();
 
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
-test('authorize user and save local storage', async ({ page }) => {
+test('authorize standard_user and save local storage', async ({ page }) => {
   const loginPage = new LoginPage(page);
   const inventoryPage = new InventoryPage(page);
   
