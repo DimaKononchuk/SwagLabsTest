@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from '@playwright/test';
 import { ProductItem } from './components/ProductItem';
 import { ProductItemList } from './components/ProductItemList';
+import { SortOption, SortOptionLabel } from './enums/SortOption';
 
 export class InventoryPage {
   private readonly page: Page;
@@ -20,7 +21,7 @@ export class InventoryPage {
     this.productItemList = new ProductItemList(page);
     
     this.pageTitle = page.locator('.title');
-    this.sortDropdown = page.locator('[data-test="product_sort_container"]');
+    this.sortDropdown = page.locator('select[data-test="product-sort-container"]');
     this.cartIcon = page.locator('a.shopping_cart_link');
     this.cartBadge = page.locator('.shopping_cart_badge');
     this.hamburgerMenu = page.locator('#react-burger-menu-btn');
@@ -39,4 +40,25 @@ export class InventoryPage {
     await expect(itemCount).toBe(count);
   }
   
+  async isTitleContains(text: string): Promise<void> {
+    const titleText = await this.pageTitle.textContent();
+    await expect(titleText).toContain(text);
+  }
+
+  getProductItemList(): ProductItemList {
+    return this.productItemList;
+
+  }
+  async sortByOption(option: SortOption): Promise<void> {
+    await this.sortDropdown.selectOption(option);
+  }
+  
+  async isCardBadgeContains(count: number): Promise<void> {
+    const badgeText = await this.cartBadge.textContent();
+    await expect(badgeText).toBe(count.toString());
+  }
+
+  async cardBadgeisHidden(): Promise<void> {
+    await expect(this.cartBadge).toBeHidden();
+  }
 }
