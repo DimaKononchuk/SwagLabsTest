@@ -13,6 +13,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
  */
 export default defineConfig({
   testDir: './tests',
+  /* Storage state path for saving/loading authentication */
+  webServer: undefined,
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -26,28 +28,39 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
+    baseURL: 'https://www.saucedemo.com',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    /* Take screenshot on failure */
+    screenshot: 'only-on-failure',
   },
 
   /* Configure projects for major browsers */
   projects: [
+    /* Setup project that saves authentication state */
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+    name: 'setup',
+    testMatch: '**/authAndStorage.spec.ts',
+    fullyParallel: false,
+    workers: 1,
+    use: { ...devices['Desktop Chrome'] },
+  },
+  {
+    name: 'inventory',
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: 'playwright/.auth/user.json',
     },
-
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
-    },
+    dependencies: ['setup'],
+    testMatch: '**/inventory.spec.ts',
+  },
+  {
+    name: 'login',
+    use: { ...devices['Desktop Chrome'] },
+    testMatch: '**/loginPage.spec.ts',
+  },
+    
 
     /* Test against mobile viewports. */
     // {
