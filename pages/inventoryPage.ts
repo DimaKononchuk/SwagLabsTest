@@ -15,6 +15,7 @@ export class InventoryPage {
   private readonly hamburgerMenu: Locator;
   private readonly logoutLink: Locator;
   private readonly aboutLink: Locator;
+  private readonly shoppingCartLink: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -27,6 +28,7 @@ export class InventoryPage {
     this.hamburgerMenu = page.locator('#react-burger-menu-btn');
     this.logoutLink = page.locator('[data-test="logout-sidebar-link"]');
     this.aboutLink = page.locator('[data-test="about-sidebar-link"]');
+    this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
   }
 
   async goto(): Promise<void> {
@@ -60,5 +62,9 @@ export class InventoryPage {
 
   async cardBadgeisHidden(): Promise<void> {
     await expect(this.cartBadge).toBeHidden();
+  }
+
+  async clickShoppingCart(): Promise<void> {
+    await this.shoppingCartLink.click();
   }
 }
