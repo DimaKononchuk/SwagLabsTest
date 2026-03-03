@@ -56,6 +56,15 @@ export default defineConfig({
     testMatch: '**/inventory.spec.ts',
   },
   {
+    name: 'checkout',
+    use: {
+      ...devices['Desktop Chrome'],
+      storageState: 'playwright/.auth/user.json',
+    },
+    dependencies: ['setup'],
+    testMatch: '**/checkout.spec.ts',
+  },
+  {
     name: 'login',
     use: { ...devices['Desktop Chrome'] },
     testMatch: '**/loginPage.spec.ts',
