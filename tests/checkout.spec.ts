@@ -46,7 +46,7 @@ test.describe('E2E Buy Product Flow', () => {
     
     await checkoutCompletePage.isPageVisible();
     await checkoutCompletePage.expectCompleteHeader('Thank you for your order!');
-    await checkoutCompletePage.expectCompleteText('Your1 order has been dispatched, and will arrive just as fast as the pony can get there!');
+    await checkoutCompletePage.expectCompleteText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');
 
     await checkoutCompletePage.goBackHome();
     await inventoryPage.isInventoryPageVisible();
