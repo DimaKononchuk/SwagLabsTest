@@ -26,7 +26,7 @@ test.describe('E2E Buy Product Flow', () => {
   });
 
   test('should successfully complete a buy order e2e flow', async ({ page }) => {
-    
+
     const firstProduct = inventoryPage.getProductItemList().getProductItemById(0);
     await firstProduct.addToCart();
     await inventoryPage.isCardBadgeContains(1);
@@ -34,7 +34,7 @@ test.describe('E2E Buy Product Flow', () => {
     await inventoryPage.clickShoppingCart();
     await cartPage.isCartPageVisible();
     await cartPage.getCartItemList().expectCartItemCount(1);
-    
+
     await cartPage.proceedToCheckout();
     await checkoutStepOnePage.isPageVisible();
     await checkoutStepOnePage.fillInformation('John', 'Doe', '12345');
@@ -43,12 +43,36 @@ test.describe('E2E Buy Product Flow', () => {
     await checkoutStepTwoPage.isPageVisible();
     await checkoutStepTwoPage.getCartItemList().expectCartItemCount(1);
     await checkoutStepTwoPage.finishCheckout();
-    
+
     await checkoutCompletePage.isPageVisible();
     await checkoutCompletePage.expectCompleteHeader('Thank you for your order!');
     await checkoutCompletePage.expectCompleteText('Your order has been dispatched, and will arrive just as fast as the pony can get there!');
 
     await checkoutCompletePage.goBackHome();
     await inventoryPage.isInventoryPageVisible();
+  });
+
+  test('should show error when first name is empty', async () => {
+    await inventoryPage.clickShoppingCart();
+    await cartPage.proceedToCheckout();
+    await checkoutStepOnePage.fillInformation('', 'Doe', '12345');
+    await checkoutStepOnePage.proceedToNextStep();
+    await checkoutStepOnePage.expectErrorMessage('Error: First Name is required');
+  });
+
+  test('should show error when last name is empty', async () => {
+    await inventoryPage.clickShoppingCart();
+    await cartPage.proceedToCheckout();
+    await checkoutStepOnePage.fillInformation('John', '', '12345');
+    await checkoutStepOnePage.proceedToNextStep();
+    await checkoutStepOnePage.expectErrorMessage('Error: Last Name is required');
+  });
+
+  test('should show error when postal code is empty', async () => {
+    await inventoryPage.clickShoppingCart();
+    await cartPage.proceedToCheckout();
+    await checkoutStepOnePage.fillInformation('John', 'Doe', '');
+    await checkoutStepOnePage.proceedToNextStep();
+    await checkoutStepOnePage.expectErrorMessage('Error: Postal Code is required');
   });
 });
